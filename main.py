@@ -306,6 +306,8 @@ def consolidate(paths: list[Path]) -> pd.DataFrame | None:
 
     parts_rows = sum(r["rows"] for r in results)
     final_df = pd.concat([r["data"] for r in results], ignore_index=True)
+    run_timestamp = pd.Timestamp.now(tz="UTC")
+    final_df["Updated_At"] = run_timestamp
 
     if len(final_df) != parts_rows:
         log(f"ROW MISMATCH! expected {parts_rows:,} got {len(final_df):,} - stopping.")
