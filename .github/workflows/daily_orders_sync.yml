@@ -28,6 +28,30 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests pandas pandas-gbq openpyxl google-auth urllib3
 
+      - name: Prepare Runtime Credentials
+        env:
+          EKART_CONFIG_JSON: ${{ secrets.EKART_CONFIG_JSON }}
+          GCP_SERVICE_ACCOUNT_JSON: ${{ secrets.GCP_SERVICE_ACCOUNT_JSON }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          config_json = os.environ.get("EKART_CONFIG_JSON")
+          service_account_json = os.environ.get("GCP_SERVICE_ACCOUNT_JSON")
+          if not config_json:
+              raise SystemExit("GitHub Actions secret EKART_CONFIG_JSON is not set")
+          if not service_account_json:
+              raise SystemExit("GitHub Actions secret GCP_SERVICE_ACCOUNT_JSON is not set")
+
+          config = json.loads(config_json)
+          service_account = json.loads(service_account_json)
+          config.setdefault("gcp", {})["key_file"] = "key.json"
+          Path("config.json").write_text(json.dumps(config), encoding="utf-8")
+          Path("key.json").write_text(json.dumps(service_account), encoding="utf-8")
+          PY
+
       - name: Verify Files
         run: |
           ls -la
