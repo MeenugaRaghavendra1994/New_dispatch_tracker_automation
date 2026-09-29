@@ -1,0 +1,10 @@
+config.json
+service-account.json
+__pycache__/
+*.py[cod]
+downloads/
+output/
+*.xlsx
+*.csv
+*.csv.gz
+*.parquet

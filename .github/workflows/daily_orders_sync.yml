@@ -1,0 +1,45 @@
+name: Daily Orders Sync
+
+on:
+  schedule:
+    # 8:00 AM IST
+    #- cron: '30 2 * * *'
+
+    # 11:00 AM IST
+    - cron: '30 5 * * *'
+
+    # 2:00 PM IST
+    #- cron: '30 8 * * *'
+
+    # 5:00 PM IST
+    #- cron: '30 11 * * *'
+
+  workflow_dispatch: # Allows manual execution from GitHub Actions
+
+jobs:
+  run-orders-sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests pandas pandas-gbq openpyxl google-auth urllib3
+
+      - name: Verify Files
+        run: |
+          ls -la
+
+      - name: Run Python Script
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: key.json
+        run: |
+          python "main.py"
