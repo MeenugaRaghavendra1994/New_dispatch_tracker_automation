@@ -26,7 +26,7 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests pandas pandas-gbq openpyxl google-auth urllib3
+          pip install requests pandas pandas-gbq openpyxl python-calamine google-auth urllib3
 
       - name: Prepare Runtime Credentials
         env:
